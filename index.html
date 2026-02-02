@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wil je mijn Valentijn zijn? 💘</title>
+  <style>
+    :root{
+      --bg1:#ffdde1;
+      --bg2:#ee9ca7;
+      --card:#ffffffcc;
+      --text:#2b2b2b;
+      --yes:#ff2d55;
+      --yes2:#ff5f7a;
+      --no:#222;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at 20% 10%, #fff 0 10%, transparent 10% 100%),
+                  radial-gradient(circle at 80% 30%, #fff 0 8%, transparent 8% 100%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+      color:var(--text);
+    }
+
+    /* Floating hearts background */
+    .heart{
+      position:absolute;
+      width:18px;height:18px;
+      transform:rotate(45deg);
+      background:rgba(255,45,85,.25);
+      animation: floatUp linear infinite;
+      border-radius:4px;
+      filter: blur(.2px);
+    }
+    .heart::before,.heart::after{
+      content:"";
+      position:absolute;
+      width:18px;height:18px;
+      background:inherit;
+      border-radius:50%;
+    }
+    .heart::before{ left:-9px; top:0; }
+    .heart::after{ left:0; top:-9px; }
+
+    @keyframes floatUp{
+      from{ transform:translateY(120vh) rotate(45deg); opacity:0; }
+      10%{ opacity:1; }
+      to{ transform:translateY(-20vh) rotate(45deg); opacity:0; }
+    }
+
+    .card{
+      position:relative;
+      width:min(680px, 92vw);
+      padding:32px 22px;
+      background:var(--card);
+      border-radius:24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.65);
+      text-align:center;
+    }
+    h1{
+      font-size: clamp(28px, 4vw, 44px);
+      margin: 8px 0 6px;
+      letter-spacing:.2px;
+    }
+    p{
+      margin: 0 0 22px;
+      font-size: clamp(15px, 2vw, 18px);
+      opacity:.85;
+    }
+    .buttons{
+      position:relative;
+      height: 120px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      padding-top:6px;
+    }
+    button{
+      border:0;
+      padding:14px 18px;
+      border-radius:999px;
+      font-size:16px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,.15);
+      touch-action: manipulation;
+      will-change: transform;
+    }
+    button:active{ transform: translateY(1px) scale(.99); }
+    #yesBtn{
+      background: linear-gradient(135deg, var(--yes), var(--yes2));
+      color:white;
+      font-weight:700;
+    }
+    #yesBtn:hover{ filter: brightness(1.05); transform: translateY(-1px) scale(1.02); }
+
+    #noBtn{
+      background: #111;
+      color: #fff;
+      font-weight:700;
+      position:relative; /* will become absolute when it starts running */
+    }
+
+    .status{
+      margin-top: 14px;
+      min-height: 28px;
+      font-weight: 650;
+    }
+    .muted{
+      opacity:.75;
+      font-weight:600;
+    }
+
+    .shake{
+      animation: shake .35s ease-in-out 0s 2;
+    }
+    @keyframes shake{
+      0%,100%{ transform: translateX(0); }
+      25%{ transform: translateX(-8px); }
+      50%{ transform: translateX(8px); }
+      75%{ transform: translateX(-6px); }
+    }
+
+    /* Confetti bits */
+    .confetti{
+      position:absolute;
+      width:10px;height:14px;
+      border-radius:3px;
+      opacity:.95;
+      left:50%;
+      top:40%;
+      animation: pop 900ms ease-out forwards;
+    }
+    @keyframes pop{
+      0%{ transform: translate(-50%,-50%) scale(.8); opacity:1; }
+      100%{ transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--r)) scale(1); opacity:0; }
+    }
+
+    .footer{
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: .6;
+    }
+  </style>
+</head>
+<body>
+  <!-- hearts background -->
+  <script>
+    // Create floating hearts in the background
+    const heartCount = 18;
+    for(let i=0;i<heartCount;i++){
+      const h=document.createElement('div');
+      h.className='heart';
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.animationDuration = (6 + Math.random()*7) + 's';
+      h.style.animationDelay = (-Math.random()*8) + 's';
+      h.style.opacity = (0.15 + Math.random()*0.35).toFixed(2);
+      const s = 12 + Math.random()*22;
+      h.style.width = h.style.height = s + 'px';
+      document.body.appendChild(h);
+    }
+  </script>
+
+  <div class="card" id="card">
+    <h1>Wil je mijn Valentijn zijn Sima?💕</h1>
+    <p class="muted">Er is maar één goed antwoord… maar ik ben heel open-minded 😉</p>
+
+    <div class="buttons" id="arena">
+      <button id="yesBtn">Jaa zeker azizam 💖</button>
+      <button id="noBtn">Neee 🙈</button>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="footer">Tip: probeer “Neee” maar eens te pakken 😈</div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+    const arena  = document.getElementById('arena');
+    const status = document.getElementById('status');
+    const card   = document.getElementById('card');
+
+    let noEscapes = 0;
+    let noIsFree  = false; // becomes absolute once it starts running
+
+    function setStatus(msg){
+      status.textContent = msg;
+    }
+
+    function rand(min, max){
+      return Math.floor(Math.random()*(max-min+1))+min;
+    }
+
+    function spawnConfetti(count=28){
+      const colors = ['#ff2d55','#ffb3c1','#ffd6e0','#ffffff','#ff6f91','#ffc75f'];
+      const rect = card.getBoundingClientRect();
+
+      for(let i=0;i<count;i++){
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.left = (rect.width/2 + rand(-80,80)) + 'px';
+        c.style.top  = (rect.height/2 + rand(-40,40)) + 'px';
+        c.style.setProperty('--dx', rand(-220,220)+'px');
+        c.style.setProperty('--dy', rand(-200,240)+'px');
+        c.style.setProperty('--r',  rand(-220,220)+'deg');
+        card.appendChild(c);
+        c.addEventListener('animationend', ()=> c.remove());
+      }
+    }
+
+    yesBtn.addEventListener('click', () => {
+      setStatus('YESSS! 💞 Oké, dan ben jij officieel mijn Valentijn. Deal? 🥰');
+      spawnConfetti(42);
+      card.classList.remove('shake');
+    });
+
+    // Make the "No" button evade the cursor.
+    function freeNoButton(){
+      if(noIsFree) return;
+      noIsFree = true;
+
+      // switch to absolute positioning inside the arena
+      const btnRect = noBtn.getBoundingClientRect();
+      const arenaRect = arena.getBoundingClientRect();
+
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = (btnRect.left - arenaRect.left) + 'px';
+      noBtn.style.top  = (btnRect.top  - arenaRect.top)  + 'px';
+    }
+
+    function moveNoButton(){
+      freeNoButton();
+
+      const arenaRect = arena.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = arenaRect.width  - btnRect.width;
+      const maxY = arenaRect.height - btnRect.height;
+
+      // keep it in bounds + a little chaos
+      let x = rand(0, Math.max(0, Math.floor(maxX)));
+      let y = rand(0, Math.max(0, Math.floor(maxY)));
+
+      noBtn.style.left = x + 'px';
+      noBtn.style.top  = y + 'px';
+    }
+
+    // Trigger evasion on hover or when getting close (mouse move)
+    noBtn.addEventListener('mouseenter', () => {
+      noEscapes++;
+      moveNoButton();
+      const lines = [
+        'Nice try 😏',
+        'Oei, net mis! 🏃‍♀️💨',
+        'Ik was even… weg. 🙈',
+        '404: “Neee” not found 💔',
+        'Je muis is te langzaam 😈',
+        'Je kan dit niet menen… toch? 😭'
+      ];
+      setStatus(lines[Math.min(lines.length-1, noEscapes-1)]);
+    });
+
+    // Also evade when cursor comes close (works better on desktop)
+    arena.addEventListener('mousemove', (e) => {
+      if (!noIsFree) return;
+
+      const btnRect = noBtn.getBoundingClientRect();
+      const mx = e.clientX, my = e.clientY;
+
+      const cx = btnRect.left + btnRect.width/2;
+      const cy = btnRect.top  + btnRect.height/2;
+
+      const dx = mx - cx;
+      const dy = my - cy;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+
+      if(dist < 90){ // proximity threshold
+        noEscapes++;
+        moveNoButton();
+      }
+    });
+
+    // If they somehow click it: comedic "error"
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      card.classList.remove('shake');
+      void card.offsetWidth; // restart animation
+      card.classList.add('shake');
+
+      const msgs = [
+        'ERROR 418: Ik weiger “Neee”. ☕️',
+        'Foutmelding: Hart gebroken (maar niet echt) 💔',
+        'Toegang geweigerd: “Neee” vereist adminrechten 😤',
+        'Systeemcrash: Te veel verdriet gedetecteerd 😭',
+        'Onmogelijk: Deze knop is alleen voor decoratie 🙃'
+      ];
+      setStatus(msgs[rand(0, msgs.length-1)]);
+    });
+
+    // Mobile friendliness: if they tap near "No", move it.
+    arena.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      if(!touch) return;
+
+      const btnRect = noBtn.getBoundingClientRect();
+      const mx = touch.clientX, my = touch.clientY;
+
+      // if touch is near the "No" button, it escapes
+      const near =
+        mx > btnRect.left - 30 && mx < btnRect.right + 30 &&
+        my > btnRect.top  - 30 && my < btnRect.bottom + 30;
+
+      if(near){
+        noEscapes++;
+        moveNoButton();
+        setStatus('Hé! Ook op mobiel ga ik rennen 🏃‍♂️💨');
+      }
+    }, {passive:true});
+
+    // Initial cute status
+    setStatus('Klik gerust… kies wijs 😇');
+  </script>
+</body>
+</html>
